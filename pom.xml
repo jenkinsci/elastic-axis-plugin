@@ -25,4 +25,17 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  <developers>
+    <developer>
+      <id>taksan</id>
+      <name>Gabriel Takeuchi</name>
+    </developer>
+  </developers>  
+  <scm>
+    <connection>scm:git:ssh://github.com/jenkinsci/elastic-axis-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/elastic-axis-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/elastic-axis-plugin</url>
+  </scm>
+  <url>http://wiki.jenkins-ci.org/display/JENKINS/Elastic+Axis</url>
 </project>
