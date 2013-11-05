@@ -32,9 +32,9 @@
     </developer>
   </developers>  
   <scm>
-    <connection>scm:git:ssh://github.com:jenkinsci/ec2-cloud-axis-plugin.git</connection>
-    <developerConnection>scm:git:ssh://github.com:jenkinsci/ec2-cloud-axis-plugin.git</developerConnection>
-    <url>https://github.com/jenkinsci/ec2-cloud-axis-plugin</url>
+    <connection>scm:git:ssh://github.com/jenkinsci/elastic-axis-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/elastic-axis-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/elastic-axis-plugin</url>
   </scm>
-  <url>http://wiki.jenkins-ci.org/display/JENKINS/EC2+Cloud+Axis</url>
+  <url>http://wiki.jenkins-ci.org/display/JENKINS/Elastic+Axis</url>
 </project>
