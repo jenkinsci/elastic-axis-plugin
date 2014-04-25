@@ -68,7 +68,7 @@ public class ElasticAxis extends LabelAxis {
 		for (String aLabel : labels) {
 			for(Node node : Jenkins.getInstance().getLabel(aLabel.trim()).getNodes()) {
 				if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) 
-					computedNodes.add(node.getDisplayName());
+					computedNodes.add(node.getSelfLabel().getExpression());
 			}
 		}
 		
