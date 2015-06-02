@@ -101,7 +101,7 @@ public class ElasticAxis extends LabelAxis {
         }
         
         public FormValidation doCheckLabelString(@QueryParameter String value) {
-        	String[] labels = value.split(" ");
+        	String[] labels = value.split(",");
         	for (String oneLabel : labels) {
         		FormValidation validation = checkOneLabel(oneLabel.trim());
 				if (!validation.equals(FormValidation.ok()))
