@@ -32,12 +32,15 @@ public class ElasticAxis extends LabelAxis {
 
 	private String label;
 	private boolean ignoreOffline;
+        private boolean dontExpandLabels;
 
     @DataBoundConstructor
-    public ElasticAxis(String name, String labelString, boolean ignoreOffline) {
-        super(name, computeAllNodesInLabel(labelString));
+    public ElasticAxis(String name, String labelString, 
+            boolean ignoreOffline, boolean dontExpandLabels) {
+        super(name, computeAllNodesInLabel(labelString, dontExpandLabels));
 		this.label = labelString;
 		this.ignoreOffline = ignoreOffline;
+                this.dontExpandLabels = dontExpandLabels;
     }
     
     public String getLabelString() {
@@ -47,29 +50,43 @@ public class ElasticAxis extends LabelAxis {
     public boolean getIgnoreOffline() {
     	return ignoreOffline;
     }
+    
+    public boolean getDontExpandLabels() {
+    	return dontExpandLabels;
+    }
 
 	@Override
     public List<String> rebuild(MatrixBuild.MatrixBuildExecution context) {
-        return computeNodesInLabel(label, ignoreOffline);
+        return computeNodesInLabel(label, ignoreOffline, dontExpandLabels);
     }
 
     @Override
     public List<String> getValues() {
-    	return computeAllNodesInLabel(label);
+    	return computeAllNodesInLabel(label, dontExpandLabels);
     }
 
-    private static List<String> computeAllNodesInLabel(String labelName) {
-		return computeNodesInLabel(labelName, false);
+    private static List<String> computeAllNodesInLabel(String labelName, Boolean dontExpandLabels) {
+		return computeNodesInLabel(labelName, false, dontExpandLabels);
 	}
     
-	private static List<String> computeNodesInLabel(String labelWithNodes, boolean restrictToOnlineNodes) {
+	private static List<String> computeNodesInLabel(String labelWithNodes, boolean restrictToOnlineNodes, boolean dontExpandLabels) {
 		List<String> computedNodes=new ArrayList<String>();
 		String[] labels = labelWithNodes.split(",");
 		for (String aLabel : labels) {
+                    if(!dontExpandLabels){
 			for(Node node : Jenkins.getInstance().getLabel(aLabel.trim()).getNodes()) {
 				if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) 
 					computedNodes.add(node.getSelfLabel().getExpression());
 			}
+                    } else {
+                        Boolean onlineNodesForLabel = false;
+                        for(Node node : Jenkins.getInstance().getLabel(aLabel.trim()).getNodes()) {
+				if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) 
+					onlineNodesForLabel = true;
+			}
+                        if(onlineNodesForLabel)
+                            computedNodes.add(Jenkins.getInstance().getLabel(aLabel.trim()).getExpression());
+                    }
 		}
 		
         return Collections.unmodifiableList(computedNodes);
@@ -96,7 +113,8 @@ public class ElasticAxis extends LabelAxis {
             return new ElasticAxis(
                     formData.getString("name"),
                     formData.getString("labelString"),
-                    formData.getBoolean("ignoreOffline")
+                    formData.getBoolean("ignoreOffline"),
+                    formData.getBoolean("dontExpandLabels")
             );
         }
         
