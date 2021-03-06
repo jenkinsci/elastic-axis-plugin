@@ -27,6 +27,11 @@
 
   <developers>
     <developer>
+      <id>MarkEWaite</id>
+      <name>Mark Waite</name>
+      <email>mark.earl.waite@gmail.com</email>
+    </developer>
+    <developer>
       <id>taksan</id>
       <name>Gabriel Takeuchi</name>
     </developer>
