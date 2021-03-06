@@ -1,6 +1,7 @@
+<?jelly escape-by-default='true'?>
 <!--
   This view is used to render the installed plugins page.
 -->
 <div>
-  Adds an axis for matrix jobs that accepts the name of a label and will run the job on all nodes in that label.
+  Adds an axis for matrix jobs that accepts the name of a label and will run the job on all nodes with that label.
 </div>
