@@ -1,4 +1,4 @@
-elastic-axis-plugin
+Elastic Axis Plugin
 ===================
 
-A jenkins plugin that allow running a multi configuration job on all slaves of a label
+A Jenkins plugin that allows running a multi configuration job on all agents matching a label.
