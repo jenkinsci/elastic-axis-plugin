@@ -9,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -38,7 +40,7 @@ public class ElasticAxisTest {
     }
 
     @Test
-    public void equalsContract() {
+    public void testEquals() {
         EqualsVerifier.forClass(ElasticAxis.class)
                 .usingGetClass()
                 .withIgnoredFields("values")
@@ -58,5 +60,21 @@ public class ElasticAxisTest {
     @Test
     public void testGetDontExpandLabels() {
         assertThat(elasticAxis.getDontExpandLabels(), is(DO_NOT_EXPAND_LABELS));
+    }
+
+    @Test
+    public void testRebuild() {
+        assertThat(elasticAxis.rebuild(null), is(empty()));
+    }
+
+    @Test
+    public void testGetValues() {
+        assertThat(elasticAxis.getValues(), is(empty()));
+    }
+
+    @Test
+    public void testGetValuesForController() {
+        elasticAxis = new ElasticAxis(AXIS_NAME, "master", IGNORE_OFFLINE, DO_NOT_EXPAND_LABELS);
+        assertThat(elasticAxis.getValues(), hasItem("master"));
     }
 }
