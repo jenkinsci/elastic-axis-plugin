@@ -1,12 +1,17 @@
 package org.jenkinsci.plugins.elasticaxisplugin;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.ClassRule;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.junit.Test;
+
 import org.jvnet.hudson.test.JenkinsRule;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -17,26 +22,44 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author Mark Waite
  */
+@RunWith(Parameterized.class)
 public class ElasticAxisTest {
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+    @ClassRule
+    public static JenkinsRule j = new JenkinsRule();
 
-    private static final Random RANDOM = new Random();
-    private static final boolean IGNORE_OFFLINE = RANDOM.nextBoolean();
-    private static final boolean DO_NOT_EXPAND_LABELS = RANDOM.nextBoolean();
-    private static final String NAME_SUFFIX = "-" + (100 + RANDOM.nextInt(899)); // 3 digit random number
-    private static final String AXIS_NAME = "axis-name" + NAME_SUFFIX;
-    private static final String LABEL_STRING = "label-string" + NAME_SUFFIX;
+    private final String axisName;
+    private final String labelString;
+    private final boolean ignoreOffline;
+    private final boolean doNotExpandLabels;
 
     private ElasticAxis elasticAxis;
 
-    public ElasticAxisTest() {
+    public ElasticAxisTest(boolean ignoreOffline, boolean doNotExpandLabels) {
+        this.ignoreOffline = ignoreOffline;
+        this.doNotExpandLabels = doNotExpandLabels;
+        String suffix = "-" + ignoreOffline + "-" + doNotExpandLabels;
+        this.axisName = "axis-name" + suffix;
+        this.labelString = "label-string" + suffix;
     }
 
     @Before
     public void setUp() {
-        elasticAxis = new ElasticAxis(AXIS_NAME, LABEL_STRING, IGNORE_OFFLINE, DO_NOT_EXPAND_LABELS);
+        elasticAxis = new ElasticAxis(axisName, labelString, ignoreOffline, doNotExpandLabels);
+    }
+
+    @Parameterized.Parameters(name = "ignoreOffline={0},doNotExpandLabels={1}")
+    public static Collection permuteTestArguments() {
+        List<Object[]> arguments = new ArrayList<>();
+        Boolean[] itemFF = {Boolean.FALSE, Boolean.FALSE};
+        arguments.add(itemFF);
+        Boolean[] itemFT = {Boolean.FALSE, Boolean.TRUE};
+        arguments.add(itemFT);
+        Boolean[] itemTF = {Boolean.TRUE, Boolean.FALSE};
+        arguments.add(itemTF);
+        Boolean[] itemTT = {Boolean.TRUE, Boolean.TRUE};
+        arguments.add(itemTT);
+        return arguments;
     }
 
     @Test
@@ -49,17 +72,17 @@ public class ElasticAxisTest {
 
     @Test
     public void testGetLabelString() {
-        assertThat(elasticAxis.getLabelString(), is(LABEL_STRING));
+        assertThat(elasticAxis.getLabelString(), is(labelString));
     }
 
     @Test
     public void testGetIgnoreOffline() {
-        assertThat(elasticAxis.getIgnoreOffline(), is(IGNORE_OFFLINE));
+        assertThat(elasticAxis.getIgnoreOffline(), is(ignoreOffline));
     }
 
     @Test
     public void testGetDontExpandLabels() {
-        assertThat(elasticAxis.getDontExpandLabels(), is(DO_NOT_EXPAND_LABELS));
+        assertThat(elasticAxis.getDontExpandLabels(), is(doNotExpandLabels));
     }
 
     @Test
@@ -74,7 +97,7 @@ public class ElasticAxisTest {
 
     @Test
     public void testGetValuesForController() {
-        elasticAxis = new ElasticAxis(AXIS_NAME, "master", IGNORE_OFFLINE, DO_NOT_EXPAND_LABELS);
-        assertThat(elasticAxis.getValues(), hasItem("master"));
+        elasticAxis = new ElasticAxis(axisName, "master || controller", ignoreOffline, doNotExpandLabels);
+        assertThat(elasticAxis.getValues(), hasItem(doNotExpandLabels ? "master||controller" : "master"));
     }
 }
