@@ -1,5 +1,8 @@
 package org.jenkinsci.plugins.elasticaxisplugin;
 
+import hudson.model.Label;
+import hudson.model.labels.LabelAtom;
+import hudson.slaves.DumbSlave;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -16,8 +20,10 @@ import org.jvnet.hudson.test.JenkinsRule;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Mark Waite
@@ -41,6 +47,18 @@ public class ElasticAxisTest {
         String suffix = "-" + ignoreOffline + "-" + doNotExpandLabels;
         this.axisName = "axis-name" + suffix;
         this.labelString = "label-string" + suffix;
+    }
+
+    @BeforeClass
+    public static void addAgent() throws Exception {
+        Label labelA = new LabelAtom("label-A");
+        Label labelB = new LabelAtom("label-B");
+        DumbSlave agentA = j.createOnlineSlave(labelA);
+        DumbSlave agentB = j.createOnlineSlave(labelB);
+        assertTrue(agentA.isAcceptingTasks());
+        assertTrue(agentB.isAcceptingTasks());
+        agentA.setNodeName("agent-A");
+        agentB.setNodeName("agent-B");
     }
 
     @Before
@@ -98,6 +116,30 @@ public class ElasticAxisTest {
     @Test
     public void testGetValuesForController() {
         elasticAxis = new ElasticAxis(axisName, "master || controller", ignoreOffline, doNotExpandLabels);
-        assertThat(elasticAxis.getValues(), hasItem(doNotExpandLabels ? "master||controller" : "master"));
+        if (doNotExpandLabels) {
+            assertThat(elasticAxis.getValues(), hasItem("master||controller"));
+        } else {
+            assertThat(elasticAxis.getValues(), hasItem("master"));
+        }
+    }
+
+    @Test
+    public void testGetValuesForAgentA() {
+        elasticAxis = new ElasticAxis(axisName, "label-A", ignoreOffline, doNotExpandLabels);
+        if (doNotExpandLabels) {
+            assertThat(elasticAxis.getValues(), hasItem("label-A"));
+        } else {
+            assertThat(elasticAxis.getValues(), hasItem("agent-A"));
+        }
+    }
+
+    @Test
+    public void testGetValuesForAgentAOrAgentB() {
+        elasticAxis = new ElasticAxis(axisName, "label-A || label-B", ignoreOffline, doNotExpandLabels);
+        if (doNotExpandLabels) {
+            assertThat(elasticAxis.getValues(), hasItem("label-A||label-B"));
+        } else {
+            assertThat(elasticAxis.getValues(), hasItems("agent-A", "agent-B"));
+        }
     }
 }
