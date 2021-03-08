@@ -71,22 +71,22 @@ public class ElasticAxis extends LabelAxis {
 	}
     
 	private static List<String> computeNodesInLabel(String labelWithNodes, boolean restrictToOnlineNodes, boolean dontExpandLabels) {
-		List<String> computedNodes=new ArrayList<String>();
+		List<String> computedNodes=new ArrayList<>();
 		String[] labels = labelWithNodes.split(",");
 		for (String aLabel : labels) {
                     if(!dontExpandLabels){
-			for(Node node : Jenkins.getInstance().getLabel(aLabel.trim()).getNodes()) {
+			for(Node node : Jenkins.get().getLabel(aLabel.trim()).getNodes()) {
 				if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) 
 					computedNodes.add(node.getSelfLabel().getExpression());
 			}
                     } else {
                         Boolean onlineNodesForLabel = false;
-                        for(Node node : Jenkins.getInstance().getLabel(aLabel.trim()).getNodes()) {
+                        for(Node node : Jenkins.get().getLabel(aLabel.trim()).getNodes()) {
 				if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) 
 					onlineNodesForLabel = true;
 			}
                         if(onlineNodesForLabel)
-                            computedNodes.add(Jenkins.getInstance().getLabel(aLabel.trim()).getExpression());
+                            computedNodes.add(Jenkins.get().getLabel(aLabel.trim()).getExpression());
                     }
 		}
 		
