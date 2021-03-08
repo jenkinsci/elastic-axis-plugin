@@ -4,6 +4,7 @@ import hudson.model.Label;
 import hudson.model.labels.LabelAtom;
 import hudson.slaves.DumbSlave;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,15 +51,16 @@ public class ElasticAxisTest {
     }
 
     @BeforeClass
-    public static void addAgent() throws Exception {
-        Label labelA = new LabelAtom("label-A");
-        Label labelB = new LabelAtom("label-B");
-        DumbSlave agentA = j.createOnlineSlave(labelA);
-        DumbSlave agentB = j.createOnlineSlave(labelB);
-        assertTrue(agentA.isAcceptingTasks());
-        assertTrue(agentB.isAcceptingTasks());
-        agentA.setNodeName("agent-A");
-        agentB.setNodeName("agent-B");
+    public static void addAgents() throws Exception {
+        addAgent("A");
+        addAgent("B");
+    }
+
+    public static void addAgent(String agentSuffix) throws Exception {
+        Label label = new LabelAtom("label-" + agentSuffix);
+        DumbSlave agent = j.createOnlineSlave(label);
+        assertTrue(agent.isAcceptingTasks());
+        agent.setNodeName("agent-" + agentSuffix);
     }
 
     @Before
@@ -69,14 +71,13 @@ public class ElasticAxisTest {
     @Parameterized.Parameters(name = "ignoreOffline={0},doNotExpandLabels={1}")
     public static Collection permuteTestArguments() {
         List<Object[]> arguments = new ArrayList<>();
-        Boolean[] itemFF = {Boolean.FALSE, Boolean.FALSE};
-        arguments.add(itemFF);
-        Boolean[] itemFT = {Boolean.FALSE, Boolean.TRUE};
-        arguments.add(itemFT);
-        Boolean[] itemTF = {Boolean.TRUE, Boolean.FALSE};
-        arguments.add(itemTF);
-        Boolean[] itemTT = {Boolean.TRUE, Boolean.TRUE};
-        arguments.add(itemTT);
+        Boolean[][] items = {
+            {Boolean.FALSE, Boolean.FALSE},
+            {Boolean.FALSE, Boolean.TRUE},
+            {Boolean.TRUE, Boolean.FALSE},
+            {Boolean.TRUE, Boolean.TRUE}
+        };
+        arguments.addAll(Arrays.asList(items));
         return arguments;
     }
 
