@@ -1,38 +1,39 @@
 package org.jenkinsci.plugins.elasticaxisplugin;
 
 import hudson.Extension;
-import hudson.Util;
 import hudson.matrix.Axis;
 import hudson.matrix.AxisDescriptor;
 import hudson.matrix.LabelAxis;
 import hudson.matrix.MatrixBuild;
 import hudson.model.AutoCompletionCandidates;
-import hudson.model.Messages;
 import hudson.model.Computer;
-import hudson.model.Label;
+import hudson.model.Job;
+import hudson.model.labels.LabelExpression;
 import hudson.model.Node;
-import hudson.model.labels.LabelAtom;
 import hudson.util.FormValidation;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-import antlr.ANTLRException;
-
 public class ElasticAxis extends LabelAxis {
 
-	private String label;
-	private boolean ignoreOffline;
-        private boolean dontExpandLabels;
+    private static final Logger LOGGER = Logger.getLogger(ElasticAxis.class.getName());
+
+    private final String label;
+    private final boolean ignoreOffline;
+    private final boolean dontExpandLabels;
 
     @DataBoundConstructor
     public ElasticAxis(String name, String labelString, 
@@ -70,22 +71,22 @@ public class ElasticAxis extends LabelAxis {
 	}
     
 	private static List<String> computeNodesInLabel(String labelWithNodes, boolean restrictToOnlineNodes, boolean dontExpandLabels) {
-		List<String> computedNodes=new ArrayList<String>();
+		List<String> computedNodes=new ArrayList<>();
 		String[] labels = labelWithNodes.split(",");
 		for (String aLabel : labels) {
                     if(!dontExpandLabels){
-			for(Node node : Jenkins.getInstance().getLabel(aLabel.trim()).getNodes()) {
+			for(Node node : Jenkins.get().getLabel(aLabel.trim()).getNodes()) {
 				if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) 
 					computedNodes.add(node.getSelfLabel().getExpression());
 			}
                     } else {
                         Boolean onlineNodesForLabel = false;
-                        for(Node node : Jenkins.getInstance().getLabel(aLabel.trim()).getNodes()) {
+                        for(Node node : Jenkins.get().getLabel(aLabel.trim()).getNodes()) {
 				if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) 
 					onlineNodesForLabel = true;
 			}
                         if(onlineNodesForLabel)
-                            computedNodes.add(Jenkins.getInstance().getLabel(aLabel.trim()).getExpression());
+                            computedNodes.add(Jenkins.get().getLabel(aLabel.trim()).getExpression());
                     }
 		}
 		
@@ -117,48 +118,51 @@ public class ElasticAxis extends LabelAxis {
                     formData.getBoolean("dontExpandLabels")
             );
         }
-        
-        public FormValidation doCheckLabelString(@QueryParameter String value) {
-        	String[] labels = value.split(",");
-        	for (String oneLabel : labels) {
-        		FormValidation validation = checkOneLabel(oneLabel.trim());
-				if (!validation.equals(FormValidation.ok()))
-					return validation;
-			}
+
+        public FormValidation doCheckLabelString(@AncestorInPath Job<?, ?> job, @QueryParameter String value) {
+            String[] labels = value.split(",");
+            List<FormValidation> aggregatedNotOkValidations = new ArrayList<>();
+            for (String oneLabel : labels) {
+                FormValidation validation = LabelExpression.validate(oneLabel, job);
+                if (!validation.equals(FormValidation.ok())) {
+                    LOGGER.log(Level.FINEST, "Remembering not ok validation {1} for label {0}", new Object[]{oneLabel, validation});
+                    aggregatedNotOkValidations.add(validation);
+                }
+            }
+            if (!aggregatedNotOkValidations.isEmpty()) {
+                FormValidation aggregatedValidations = FormValidation.aggregate(aggregatedNotOkValidations);
+                LOGGER.log(Level.FINEST, "Returning aggregated not ok validation {1} for labels {0}", new Object[]{labels, aggregatedValidations});
+                return aggregatedValidations;
+            }
+            LOGGER.log(Level.FINEST, "Returning ok validation for labels {0}", labels);
+
             return FormValidation.ok();
         }
 
-		private FormValidation checkOneLabel(String oneLabel) {
-			if (Util.fixEmpty(oneLabel)==null)
-				return FormValidation.ok(); 
-			
-			Label l = Jenkins.getInstance().getLabel(oneLabel);
-			if (l.isEmpty()) {
-				for (LabelAtom a : l.listAtoms()) {
-					if (a.isEmpty()) {
-						LabelAtom nearest = LabelAtom.findNearest(a.getName());
-						return FormValidation.warning(Messages.AbstractProject_AssignedLabelString_NoMatch_DidYouMean(a.getName(),nearest.getDisplayName()));
-					}
-				}
-				return FormValidation.warning(Messages.AbstractProject_AssignedLabelString_NoMatch());
-			}
-			return FormValidation.ok();
-		}
-        
         public AutoCompletionCandidates doAutoCompleteLabelString(@QueryParameter String value) {
-            AutoCompletionCandidates c = new AutoCompletionCandidates();
-            Set<Label> labels = Jenkins.getInstance().getLabels();
-            List<String> queries = new AutoCompleteSeeder(value).getSeeds();
-
-            for (String term : queries) {
-                for (Label l : labels) {
-                    if (l.getName().startsWith(term)) {
-                        c.add(l.getName());
-                    }
-                }
-            }
-            return c;
+            return LabelExpression.autoComplete(value);
         }
     }
 
+   @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ElasticAxis that = (ElasticAxis) o;
+        return Objects.equals(getName(), that.getName())
+                && Objects.equals(label, that.label)
+                && Objects.equals(ignoreOffline, that.ignoreOffline)
+                && Objects.equals(dontExpandLabels, that.dontExpandLabels);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), label, ignoreOffline, dontExpandLabels);
+    }
 }

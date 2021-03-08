@@ -3,7 +3,8 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.480.3</version><!-- which version of Jenkins is this plugin built against? -->
+    <version>4.16</version>
+    <relativePath />
   </parent>
 
   <artifactId>elastic-axis</artifactId>
@@ -14,18 +15,23 @@
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>https://repo.jenkins-ci.org/public/</url>
     </repository>
   </repositories>
 
   <pluginRepositories>
     <pluginRepository>
       <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>https://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
 
   <developers>
+    <developer>
+      <id>MarkEWaite</id>
+      <name>Mark Waite</name>
+      <email>mark.earl.waite@gmail.com</email>
+    </developer>
     <developer>
       <id>taksan</id>
       <name>Gabriel Takeuchi</name>
@@ -36,5 +42,42 @@
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/elastic-axis-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/elastic-axis-plugin</url>
   </scm>
-  <url>http://wiki.jenkins-ci.org/display/JENKINS/Elastic+Axis</url>
+
+  <url>https://github.com/jenkinsci/elastic-axis-plugin/</url>
+  <name>Elastic Axis Plugin</name>
+  <description>Allow multiconfiguration jobs to run on all agents matching a label</description>
+  <inceptionYear>2013</inceptionYear>
+
+  <properties>
+    <jenkins.version>2.249.1</jenkins.version>
+    <java.level>8</java.level>
+    <spotbugs.effort>Max</spotbugs.effort>
+    <spotbugs.failOnError>true</spotbugs.failOnError>
+    <spotbugs.threshold>High</spotbugs.threshold>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom-2.249.x</artifactId>
+        <version>25</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>matrix-project</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>nl.jqno.equalsverifier</groupId>
+      <artifactId>equalsverifier</artifactId>
+      <version>3.5.5</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
