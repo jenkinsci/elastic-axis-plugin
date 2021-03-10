@@ -4,7 +4,6 @@ import hudson.model.Label;
 import hudson.model.labels.LabelAtom;
 import hudson.slaves.DumbSlave;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,25 +41,33 @@ public class ElasticAxisTest {
 
     private ElasticAxis elasticAxis;
 
-    public ElasticAxisTest(boolean ignoreOffline, boolean doNotExpandLabels) {
+    private static final String AGENT_PREFIX = "agent-";
+    private static final String LABEL_PREFIX = "label-";
+    private static final String DOES_NOT_EXIST_SUFFIX = "does-not-exist";
+
+    private static final String[] LABEL_SUFFIXES = {"A", "B"};
+
+    public ElasticAxisTest(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
         this.ignoreOffline = ignoreOffline;
         this.doNotExpandLabels = doNotExpandLabels;
         String suffix = "-" + ignoreOffline + "-" + doNotExpandLabels;
         this.axisName = "axis-name" + suffix;
-        this.labelString = "label-string" + suffix;
+        this.labelString = labelString;
     }
 
     @BeforeClass
     public static void addAgents() throws Exception {
-        addAgent("A");
-        addAgent("B");
+        // Add agents with test labels
+        for (String labelSuffix : LABEL_SUFFIXES) {
+            addAgent(labelSuffix);
+        }
     }
 
     public static void addAgent(String agentSuffix) throws Exception {
-        Label label = new LabelAtom("label-" + agentSuffix);
+        Label label = new LabelAtom(LABEL_PREFIX + agentSuffix);
         DumbSlave agent = j.createOnlineSlave(label);
         assertTrue(agent.isAcceptingTasks());
-        agent.setNodeName("agent-" + agentSuffix);
+        agent.setNodeName(AGENT_PREFIX + agentSuffix);
     }
 
     @Before
@@ -71,13 +78,19 @@ public class ElasticAxisTest {
     @Parameterized.Parameters(name = "ignoreOffline={0},doNotExpandLabels={1}")
     public static Collection permuteTestArguments() {
         List<Object[]> arguments = new ArrayList<>();
-        Boolean[][] items = {
-            {Boolean.FALSE, Boolean.FALSE},
-            {Boolean.FALSE, Boolean.TRUE},
-            {Boolean.TRUE, Boolean.FALSE},
-            {Boolean.TRUE, Boolean.TRUE}
-        };
-        arguments.addAll(Arrays.asList(items));
+        Boolean[] possibleValues = {Boolean.TRUE, Boolean.FALSE};
+        for (Boolean ignoreOffline : possibleValues) {
+            for (Boolean doNotExpandLabels : possibleValues) {
+                for (String labelSuffix : LABEL_SUFFIXES) {
+                    // Test for known agents
+                    Object[] argument = {AGENT_PREFIX + labelSuffix, ignoreOffline, doNotExpandLabels};
+                    arguments.add(argument);
+                }
+                // Test that a non-existing agent matches nothing
+                Object[] argument = {AGENT_PREFIX + DOES_NOT_EXIST_SUFFIX, ignoreOffline, doNotExpandLabels};
+                arguments.add(argument);
+            }
+        }
         return arguments;
     }
 
@@ -106,12 +119,22 @@ public class ElasticAxisTest {
 
     @Test
     public void testRebuild() {
-        assertThat(elasticAxis.rebuild(null), is(empty()));
+        if (labelString.contains(DOES_NOT_EXIST_SUFFIX)) {
+            assertThat(elasticAxis.rebuild(null), is(empty()));
+        } else {
+            String agentName = labelString.replace(LABEL_PREFIX, AGENT_PREFIX);
+            assertThat(elasticAxis.rebuild(null), hasItem(agentName));
+        }
     }
 
     @Test
     public void testGetValues() {
-        assertThat(elasticAxis.getValues(), is(empty()));
+        if (labelString.contains(DOES_NOT_EXIST_SUFFIX)) {
+            assertThat(elasticAxis.getValues(), is(empty()));
+        } else {
+            String agentName = labelString.replace(LABEL_PREFIX, AGENT_PREFIX);
+            assertThat(elasticAxis.getValues(), hasItem(agentName));
+        }
     }
 
     @Test
@@ -121,16 +144,6 @@ public class ElasticAxisTest {
             assertThat(elasticAxis.getValues(), hasItem("master||controller"));
         } else {
             assertThat(elasticAxis.getValues(), hasItem("master"));
-        }
-    }
-
-    @Test
-    public void testGetValuesForAgentA() {
-        elasticAxis = new ElasticAxis(axisName, "label-A", ignoreOffline, doNotExpandLabels);
-        if (doNotExpandLabels) {
-            assertThat(elasticAxis.getValues(), hasItem("label-A"));
-        } else {
-            assertThat(elasticAxis.getValues(), hasItem("agent-A"));
         }
     }
 
