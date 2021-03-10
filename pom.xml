@@ -1,5 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
@@ -11,20 +13,10 @@
   <version>1.4-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
-  <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
-  <repositories>
-    <repository>
-      <id>repo.jenkins-ci.org</id>
-      <url>https://repo.jenkins-ci.org/public/</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>repo.jenkins-ci.org</id>
-      <url>https://repo.jenkins-ci.org/public/</url>
-    </pluginRepository>
-  </pluginRepositories>
+  <name>Elastic Axis Plugin</name>
+  <description>Allow multiconfiguration jobs to run on all agents matching a label</description>
+  <url>https://github.com/jenkinsci/elastic-axis-plugin/</url>
+  <inceptionYear>2013</inceptionYear>
 
   <developers>
     <developer>
@@ -36,18 +28,14 @@
       <id>taksan</id>
       <name>Gabriel Takeuchi</name>
     </developer>
-  </developers>  
+  </developers>
+
   <scm>
     <connection>scm:git:ssh://github.com/jenkinsci/elastic-axis-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/elastic-axis-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/elastic-axis-plugin</url>
     <tag>HEAD</tag>
   </scm>
-
-  <url>https://github.com/jenkinsci/elastic-axis-plugin/</url>
-  <name>Elastic Axis Plugin</name>
-  <description>Allow multiconfiguration jobs to run on all agents matching a label</description>
-  <inceptionYear>2013</inceptionYear>
 
   <properties>
     <jenkins.version>2.249.1</jenkins.version>
@@ -68,7 +56,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
@@ -81,4 +68,39 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
+  <repositories>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <plugins>
+      <!-- Fail build on pom formatting errors -->
+      <!-- Fix with mvn tidy:pom -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>tidy-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
