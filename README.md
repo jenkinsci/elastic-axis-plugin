@@ -1,8 +1,8 @@
 # Elastic Axis Plugin
 
-A Jenkins plugin that allows running a multi configuration job on all agents matching a label.
+A Jenkins plugin that will run a multi configuration job on all agents matching a label.
 
-This plugin is a power up for the multi configuration jobs allowing you to configure jobs to run on all slaves under a single label.
+This plugin enhances multi configuration jobs by allowing jobs to run on all agents matching a label.
 
 ## Description
 
@@ -36,7 +36,7 @@ Sometimes, the computers in your cloud might end up in maintenance or go offline
 In our company we have more than 25k functional tests that take 12 hours or so to run on a standalone desktop computer.
 But our test running engine was designed in such a way that you can configure more than one instance to run the set of tests.
 So, by using 20 modest computing units, we are able to run the whole set of tests in about an hour.
-By using Jenkins multi-configuration jobs, automatically running the tests over 20 computer slaves becomes a reality.
+By using Jenkins multi-configuration jobs, automatically running the tests over 20 computer agents becomes a reality.
 
 Now, we have several production branches of our product, all of them with the same 25k tests that should run as often as possible to make sure the fixes are not causing regression.
 And they all share the same grid of computers on Jenkins to run the tests.
