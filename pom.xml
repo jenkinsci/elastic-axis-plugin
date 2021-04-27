@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>elastic-axis</artifactId>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.5-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <name>Elastic Axis Plugin</name>
