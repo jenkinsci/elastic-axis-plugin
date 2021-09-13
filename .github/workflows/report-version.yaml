@@ -21,4 +21,4 @@ jobs:
 
       - name: next release version
         id: nextversion
-        uses: ghcr.io/jenkins-x/jx-release-version:2.4.13
+        uses: ghcr.io/jenkins-x/jx-release-version@2.4.13
