@@ -1,38 +1,32 @@
 package org.jenkinsci.plugins.elasticaxisplugin;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.junit.Assert.assertTrue;
+
 import hudson.model.Label;
 import hudson.model.labels.LabelAtom;
 import hudson.slaves.DumbSlave;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import nl.jqno.equalsverifier.EqualsVerifier;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.Test;
-
 import org.jvnet.hudson.test.JenkinsRule;
 
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-/**
- * @author Mark Waite
- */
+/** @author Mark Waite */
 @RunWith(Parameterized.class)
 public class ElasticAxisTest {
 
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
+    @ClassRule public static JenkinsRule j = new JenkinsRule();
 
     private final String axisName;
     private final String labelString;
@@ -83,11 +77,15 @@ public class ElasticAxisTest {
             for (Boolean doNotExpandLabels : possibleValues) {
                 for (String labelSuffix : LABEL_SUFFIXES) {
                     // Test for known agents
-                    Object[] argument = {AGENT_PREFIX + labelSuffix, ignoreOffline, doNotExpandLabels};
+                    Object[] argument = {
+                        AGENT_PREFIX + labelSuffix, ignoreOffline, doNotExpandLabels
+                    };
                     arguments.add(argument);
                 }
                 // Test that a non-existing agent matches nothing
-                Object[] argument = {AGENT_PREFIX + DOES_NOT_EXIST_SUFFIX, ignoreOffline, doNotExpandLabels};
+                Object[] argument = {
+                    AGENT_PREFIX + DOES_NOT_EXIST_SUFFIX, ignoreOffline, doNotExpandLabels
+                };
                 arguments.add(argument);
             }
         }
@@ -141,7 +139,9 @@ public class ElasticAxisTest {
     public void testGetValuesForController() {
         // selfLabel will be "master" before 2.307 and "built-in" after 2.307
         String expectedLabel = j.jenkins.getSelfLabel().getName();
-        elasticAxis = new ElasticAxis(axisName, expectedLabel + " || built-in", ignoreOffline, doNotExpandLabels);
+        elasticAxis =
+                new ElasticAxis(
+                        axisName, expectedLabel + " || built-in", ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
             assertThat(elasticAxis.getValues(), hasItem(expectedLabel + "||built-in"));
         } else {
@@ -151,7 +151,8 @@ public class ElasticAxisTest {
 
     @Test
     public void testGetValuesForAgentAOrAgentB() {
-        elasticAxis = new ElasticAxis(axisName, "label-A || label-B", ignoreOffline, doNotExpandLabels);
+        elasticAxis =
+                new ElasticAxis(axisName, "label-A || label-B", ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
             assertThat(elasticAxis.getValues(), hasItem("label-A||label-B"));
         } else {
