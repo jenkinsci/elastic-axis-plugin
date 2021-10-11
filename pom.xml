@@ -104,7 +104,6 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <!-- Stuck on 2.17.0 because we must build with Java 8 and Java 11 -->
         <version>2.17.0</version>
         <configuration>
           <!-- define a language-specific format -->
