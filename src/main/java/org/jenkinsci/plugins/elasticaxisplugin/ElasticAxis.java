@@ -23,6 +23,7 @@ import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.interceptor.RequirePOST;
 
 public class ElasticAxis extends LabelAxis {
 
@@ -116,8 +117,10 @@ public class ElasticAxis extends LabelAxis {
                     formData.getBoolean("dontExpandLabels"));
         }
 
+        @RequirePOST
         public FormValidation doCheckLabelString(
                 @AncestorInPath Job<?, ?> job, @QueryParameter String value) {
+            job.checkPermission(hudson.model.Item.CONFIGURE);
             String[] labels = value.split(",");
             List<FormValidation> aggregatedNotOkValidations = new ArrayList<>();
             for (String oneLabel : labels) {
@@ -144,6 +147,7 @@ public class ElasticAxis extends LabelAxis {
             return FormValidation.ok();
         }
 
+        @RequirePOST
         public AutoCompletionCandidates doAutoCompleteLabelString(@QueryParameter String value) {
             return LabelExpression.autoComplete(value);
         }
