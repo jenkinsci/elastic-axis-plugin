@@ -45,3 +45,7 @@ This is where the Elastic Axis plugin becomes a great tool.
 By using the plugin, we are able to easily manage the computing resources and change it without ever reconfiguring the jobs.
 The kind of task we run doesn't care whether you have 20 or 50 computers, it will complete even with a single unit.
 But by adding more computers, we can speed it and even the daunting task of running 25k functional tests that access databases turns out to run on acceptable time for continuous integration purposes.
+
+## Report an Issue
+
+Please report issues and enhancements through the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#17588).
