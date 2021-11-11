@@ -1,13 +1,11 @@
-chore:
+skip-changelog:
 - .gitattributes
 - .github/**/*
 - .gitignore
 - .settings/*
 - Jenkinsfile
 
-dependencies:
+enhancement:
 - pom.xml
-
-documentation:
 - CONTRIBUTING.md
 - README.md
