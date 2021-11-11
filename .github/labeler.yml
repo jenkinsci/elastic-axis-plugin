@@ -1,0 +1,13 @@
+chore:
+- .gitattributes
+- .github/**/*
+- .gitignore
+- .settings/*
+- Jenkinsfile
+
+dependencies:
+- pom.xml
+
+documentation:
+- CONTRIBUTING.md
+- README.md
