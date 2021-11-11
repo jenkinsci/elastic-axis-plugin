@@ -1,0 +1,11 @@
+skip-changelog:
+- .gitattributes
+- .github/**/*
+- .gitignore
+- .settings/*
+- Jenkinsfile
+
+enhancement:
+- pom.xml
+- CONTRIBUTING.md
+- README.md
