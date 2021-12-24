@@ -5,7 +5,9 @@ skip-changelog:
 - .settings/*
 - Jenkinsfile
 
-enhancement:
+chore:
 - pom.xml
 - CONTRIBUTING.md
+
+enhancement:
 - README.md
