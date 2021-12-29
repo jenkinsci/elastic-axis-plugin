@@ -33,3 +33,5 @@ If the formatting is not correct, the build will fail.  Correct the formatting w
 Releases are performed automatically using the `jx-release-version` command to increment the version number.
 Special thanks to Gareth Evans for his help configuring the automated release action.
 The version number is incremented based on the category of entries in the `next` changelog draft on GitHub.
+
+The repository is intentionally not configured to use [incrementals](https://www.jenkins.io/doc/developer/plugin-development/incrementals/) because it releases a new version on each change that is determined to be interesting.
