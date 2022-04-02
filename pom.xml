@@ -14,7 +14,6 @@
   <packaging>hpi</packaging>
 
   <name>Elastic Axis Plugin</name>
-  <description>Allow multiconfiguration jobs to run on all agents matching a label</description>
   <url>https://github.com/jenkinsci/elastic-axis-plugin/</url>
   <inceptionYear>2013</inceptionYear>
 
