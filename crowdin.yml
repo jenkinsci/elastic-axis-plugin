@@ -4,6 +4,11 @@ files:
       - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.properties'
       - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%_*.properties'
     translation: '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.properties'
+  - source: 'src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/*.html'
+    ignore:
+      - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.html'
+      - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%_*.html'
+    translation: '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.html'
 
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_PERSONAL_TOKEN
