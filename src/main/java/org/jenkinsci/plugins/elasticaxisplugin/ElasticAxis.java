@@ -105,7 +105,7 @@ public class ElasticAxis extends LabelAxis {
 
         @Override
         public String getDisplayName() {
-            return "ElasticAxis";
+            return Messages.ElasticAxisDisplayName();
         }
 
         @Override
