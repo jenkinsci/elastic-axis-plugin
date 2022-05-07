@@ -1,13 +1,13 @@
 files:
-  - source: 'src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/*.properties'
+  - source: '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/*.properties'
     ignore:
       - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.properties'
-      - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%_*.properties'
+      - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%locale_with_underscore%.properties'
     translation: '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.properties'
   - source: 'src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/*.html'
     ignore:
       - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.html'
-      - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%_*.html'
+      - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%locale_with_underscore%.html'
     translation: '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.html'
 
 project_id_env: CROWDIN_PROJECT_ID
