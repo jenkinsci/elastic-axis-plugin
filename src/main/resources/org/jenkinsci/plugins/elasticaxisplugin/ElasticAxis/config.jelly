@@ -1,15 +1,15 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
-  <f:entry title="Elastic Axis" field="name">
+  <f:entry title="${%Elastic_Axis}" field="name">
     <f:textbox default="label" />
   </f:entry>
-  <f:entry title="${%Node Label}" field="labelString">
+  <f:entry title="${%Node_Label}" field="labelString">
       <f:textbox autoCompleteDelimChar=" "/>
   </f:entry>
-  <f:entry title="${%Skip building on offline nodes}" field="ignoreOffline">
+  <f:entry title="${%Skip_building_on_offline_nodes}" field="ignoreOffline">
      <f:checkbox/>
    </f:entry> 
-  <f:entry title="${%Build once per label}" field="dontExpandLabels">
+  <f:entry title="${%Build_once_per_label}" field="dontExpandLabels">
      <f:checkbox/>
    </f:entry> 
 </j:jelly>
