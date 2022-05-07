@@ -2,6 +2,7 @@ files:
   - source: 'src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/*.properties'
     ignore:
       - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.properties'
+      - '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%_*.properties'
     translation: '/src/main/resources/org/jenkinsci/plugins/elasticaxisplugin/**/%file_name%_%two_letters_code%.properties'
 
 project_id_env: CROWDIN_PROJECT_ID
