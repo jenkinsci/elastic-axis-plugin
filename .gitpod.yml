@@ -8,7 +8,6 @@ tasks:
 vscode:
   extensions:
     - bierner.markdown-preview-github-styles
-    - github.vscode-pull-request-github
     - vscjava.vscode-java-pack
     - redhat.java
     - vscjava.vscode-java-debug
