@@ -37,7 +37,7 @@
   </scm>
 
   <properties>
-    <jenkins.version>2.319.3</jenkins.version>
+    <jenkins.version>2.332.4</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.failOnError>true</spotbugs.failOnError>
     <spotbugs.threshold>High</spotbugs.threshold>
@@ -47,7 +47,7 @@
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.319.x</artifactId>
+        <artifactId>bom-2.332.x</artifactId>
         <version>1577.v63609d9cb_5dc</version>
         <type>pom</type>
         <scope>import</scope>
