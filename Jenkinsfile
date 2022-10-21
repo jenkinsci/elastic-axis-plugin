@@ -7,8 +7,8 @@ def useContainerForOddBuilds = ((BUILD_ID as int) % 2) as boolean
 buildPlugin(
   useContainerAgent: useContainerForOddBuilds,
   configurations: [
-    [platform: 'linux',   jdk: '17', jenkins: '2.346.3'],
-    [platform: 'linux',   jdk: '11'],
+    [platform: 'linux',   jdk: '17', jenkins: '2.374'],
+    [platform: 'linux',   jdk: '11', jenkins: '2.361.2'],
     [platform: 'windows', jdk:  '8']
   ]
 )
