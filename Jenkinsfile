@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 
+/* `buildPlugin` step provided by: https://github.com/jenkins-infra/pipeline-library */
 buildPlugin(
   useContainerAgent: true,
   // Opt-in to the Artifact Caching Proxy, to be removed when it will be in opt-out.
