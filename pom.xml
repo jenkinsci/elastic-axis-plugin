@@ -39,7 +39,7 @@
   <properties>
     <jenkins.version>2.361.4</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
-    <spotbugs.threshold>High</spotbugs.threshold>
+    <spotbugs.threshold>Low</spotbugs.threshold>
   </properties>
 
   <dependencyManagement>
