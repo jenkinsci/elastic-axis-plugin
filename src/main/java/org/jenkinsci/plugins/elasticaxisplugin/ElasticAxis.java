@@ -74,18 +74,24 @@ public class ElasticAxis extends LabelAxis {
         String[] labels = labelWithNodes.split(",");
         for (String aLabel : labels) {
             if (!dontExpandLabels) {
-                for (Node node : Jenkins.get().getLabel(aLabel.trim()).getNodes()) {
-                    if (shouldAddNode(restrictToOnlineNodes, node.toComputer()))
-                        computedNodes.add(node.getSelfLabel().getExpression());
+                hudson.model.Label agentLabel = Jenkins.get().getLabel(aLabel.trim());
+                if (agentLabel != null) {
+                    for (Node node : agentLabel.getNodes()) {
+                        if (shouldAddNode(restrictToOnlineNodes, node.toComputer()))
+                            computedNodes.add(node.getSelfLabel().getExpression());
+                    }
                 }
             } else {
-                Boolean onlineNodesForLabel = false;
-                for (Node node : Jenkins.get().getLabel(aLabel.trim()).getNodes()) {
-                    if (shouldAddNode(restrictToOnlineNodes, node.toComputer()))
-                        onlineNodesForLabel = true;
+                boolean onlineNodesForLabel = false;
+                hudson.model.Label agentLabel = Jenkins.get().getLabel(aLabel.trim());
+                if (agentLabel != null) {
+                    for (Node node : agentLabel.getNodes()) {
+                        if (shouldAddNode(restrictToOnlineNodes, node.toComputer()))
+                            onlineNodesForLabel = true;
+                    }
+                    if (onlineNodesForLabel)
+                        computedNodes.add(agentLabel.getExpression());
                 }
-                if (onlineNodesForLabel)
-                    computedNodes.add(Jenkins.get().getLabel(aLabel.trim()).getExpression());
             }
         }
 
