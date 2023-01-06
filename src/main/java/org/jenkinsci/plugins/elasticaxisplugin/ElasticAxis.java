@@ -89,8 +89,9 @@ public class ElasticAxis extends LabelAxis {
                         if (shouldAddNode(restrictToOnlineNodes, node.toComputer()))
                             onlineNodesForLabel = true;
                     }
-                    if (onlineNodesForLabel)
+                    if (onlineNodesForLabel) {
                         computedNodes.add(agentLabel.getExpression());
+                    }
                 }
             }
         }

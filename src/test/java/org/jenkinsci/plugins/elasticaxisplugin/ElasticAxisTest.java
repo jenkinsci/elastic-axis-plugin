@@ -22,7 +22,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.jvnet.hudson.test.JenkinsRule;
 
-/** @author Mark Waite */
+/**
+ * @author Mark Waite
+ */
 @RunWith(Parameterized.class)
 public class ElasticAxisTest {
 
