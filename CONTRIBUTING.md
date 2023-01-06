@@ -5,33 +5,50 @@ New feature proposals and bug fix proposals should be submitted as
 [GitHub pull requests](https://help.github.com/articles/creating-a-pull-request).
 Your pull request will be evaluated by the [Jenkins job](https://ci.jenkins.io/job/Plugins/job/elastic-axis-plugin/).
 
-Before submitting your change, please assure that you've added tests which verify your change.
+Before submitting your change, please assure that you've added tests that verify the change.
 
-## Code Coverage
+## Code formatting
 
-Code coverage reporting is available as a maven target.
-Please try to improve code coverage with tests when you submit.
-* `mvn -P enable-jacoco clean install jacoco:report` to report code coverage
-
-Please don't introduce new spotbugs output.
-* `mvn spotbugs:check` to analyze project using [Spotbugs](https://spotbugs.github.io)
-* `mvn spotbugs:gui` to review report using GUI
-
-## Code Formatting
-
-Code formatting is maintained by the spotless maven plugin.
+Source code and pom file formatting is maintained by the `spotless` maven plugin.
 Before submitting a pull request, confirm the formatting is correct with:
-
-* `mvn spotless:check compile`
-
-If the formatting is not correct, the build will fail.  Correct the formatting with:
 
 * `mvn spotless:apply`
 
-## Releases
+## Spotbugs checks
 
-Releases are performed automatically using the `jx-release-version` command to increment the version number.
-Special thanks to Gareth Evans for his help configuring the automated release action.
-The version number is incremented based on the category of entries in the `next` changelog draft on GitHub.
+Please don't introduce new spotbugs output.
+
+* `mvn spotbugs:check` analyzes the project using [Spotbugs](https://spotbugs.github.io)
+* `mvn spotbugs:gui` displays the spotbugs report using GUI
+
+## Code coverage
+
+Code coverage reporting is available as a maven target.
+Please try to improve code coverage with tests when you submit pull requests.
+
+* `mvn -P enable-jacoco clean install jacoco:report` reports code coverage
+
+### Reviewing code coverage
+
+The code coverage report is a set of HTML files that show methods and lines executed.
+The following commands will open the `index.html` file in the browser.
+
+* Windows - `start target\site\jacoco\index.html`
+* Linux - `xdg-open target/site/jacoco/index.html`
+* Gitpod - `cd target/site/jacoco && python -m http.server 8000`
+
+The file will have a list of package names.
+Click on them to find a list of class names.
+
+The lines of the code will be covered in three different colors, red, green, and orange.
+Red lines are not covered in the tests.
+Green lines are covered with tests.
+
+## Continuous delivery
 
 The repository is intentionally not configured to use [incrementals](https://www.jenkins.io/doc/developer/plugin-development/incrementals/) because it releases a new version on each change that is determined to be interesting.
+
+## Reporting Issues
+
+Report issues in the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#18422).
+Please use the link:https://www.jenkins.io/participate/report-issue/["How to Report an Issue"] guidelines when reporting issues.
