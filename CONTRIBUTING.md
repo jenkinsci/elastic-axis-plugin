@@ -44,11 +44,7 @@ The lines of the code will be covered in three different colors, red, green, and
 Red lines are not covered in the tests.
 Green lines are covered with tests.
 
-## Continuous delivery
-
-The repository is intentionally not configured to use [incrementals](https://www.jenkins.io/doc/developer/plugin-development/incrementals/) because it releases a new version on each change that is determined to be interesting.
-
 ## Reporting Issues
 
 Report issues in the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#18422).
-Please use the link:https://www.jenkins.io/participate/report-issue/["How to Report an Issue"] guidelines when reporting issues.
+Please use the ["How to Report an Issue"](https://www.jenkins.io/participate/report-issue/) guidelines when reporting issues.
