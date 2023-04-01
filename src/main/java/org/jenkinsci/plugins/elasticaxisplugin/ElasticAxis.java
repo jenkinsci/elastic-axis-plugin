@@ -34,8 +34,7 @@ public class ElasticAxis extends LabelAxis {
     private final boolean dontExpandLabels;
 
     @DataBoundConstructor
-    public ElasticAxis(
-            String name, String labelString, boolean ignoreOffline, boolean dontExpandLabels) {
+    public ElasticAxis(String name, String labelString, boolean ignoreOffline, boolean dontExpandLabels) {
         super(name, computeAllNodesInLabel(labelString, dontExpandLabels));
         this.label = labelString;
         this.ignoreOffline = ignoreOffline;
@@ -86,8 +85,7 @@ public class ElasticAxis extends LabelAxis {
                 hudson.model.Label agentLabel = Jenkins.get().getLabel(aLabel.trim());
                 if (agentLabel != null) {
                     for (Node node : agentLabel.getNodes()) {
-                        if (shouldAddNode(restrictToOnlineNodes, node.toComputer()))
-                            onlineNodesForLabel = true;
+                        if (shouldAddNode(restrictToOnlineNodes, node.toComputer())) onlineNodesForLabel = true;
                     }
                     if (onlineNodesForLabel) {
                         computedNodes.add(agentLabel.getExpression());
@@ -125,28 +123,24 @@ public class ElasticAxis extends LabelAxis {
         }
 
         @RequirePOST
-        public FormValidation doCheckLabelString(
-                @AncestorInPath Job<?, ?> job, @QueryParameter String value) {
+        public FormValidation doCheckLabelString(@AncestorInPath Job<?, ?> job, @QueryParameter String value) {
             job.checkPermission(hudson.model.Item.CONFIGURE);
             String[] labels = value.split(",");
             List<FormValidation> aggregatedNotOkValidations = new ArrayList<>();
             for (String oneLabel : labels) {
                 FormValidation validation = LabelExpression.validate(oneLabel, job);
                 if (!validation.equals(FormValidation.ok())) {
-                    LOGGER.log(
-                            Level.FINEST,
-                            "Remembering not ok validation {1} for label {0}",
-                            new Object[] {oneLabel, validation});
+                    LOGGER.log(Level.FINEST, "Remembering not ok validation {1} for label {0}", new Object[] {
+                        oneLabel, validation
+                    });
                     aggregatedNotOkValidations.add(validation);
                 }
             }
             if (!aggregatedNotOkValidations.isEmpty()) {
-                FormValidation aggregatedValidations =
-                        FormValidation.aggregate(aggregatedNotOkValidations);
-                LOGGER.log(
-                        Level.FINEST,
-                        "Returning aggregated not ok validation {1} for labels {0}",
-                        new Object[] {labels, aggregatedValidations});
+                FormValidation aggregatedValidations = FormValidation.aggregate(aggregatedNotOkValidations);
+                LOGGER.log(Level.FINEST, "Returning aggregated not ok validation {1} for labels {0}", new Object[] {
+                    labels, aggregatedValidations
+                });
                 return aggregatedValidations;
             }
             LOGGER.log(Level.FINEST, "Returning ok validation for labels {0}", labels);
