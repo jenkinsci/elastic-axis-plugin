@@ -28,7 +28,8 @@ import org.jvnet.hudson.test.JenkinsRule;
 @RunWith(Parameterized.class)
 public class ElasticAxisTest {
 
-    @ClassRule public static JenkinsRule j = new JenkinsRule();
+    @ClassRule
+    public static JenkinsRule j = new JenkinsRule();
 
     private final String axisName;
     private final String labelString;
@@ -79,15 +80,11 @@ public class ElasticAxisTest {
             for (Boolean doNotExpandLabels : possibleValues) {
                 for (String labelSuffix : LABEL_SUFFIXES) {
                     // Test for known agents
-                    Object[] argument = {
-                        AGENT_PREFIX + labelSuffix, ignoreOffline, doNotExpandLabels
-                    };
+                    Object[] argument = {AGENT_PREFIX + labelSuffix, ignoreOffline, doNotExpandLabels};
                     arguments.add(argument);
                 }
                 // Test that a non-existing agent matches nothing
-                Object[] argument = {
-                    AGENT_PREFIX + DOES_NOT_EXIST_SUFFIX, ignoreOffline, doNotExpandLabels
-                };
+                Object[] argument = {AGENT_PREFIX + DOES_NOT_EXIST_SUFFIX, ignoreOffline, doNotExpandLabels};
                 arguments.add(argument);
             }
         }
@@ -141,9 +138,7 @@ public class ElasticAxisTest {
     public void testGetValuesForController() {
         // selfLabel will be "master" before 2.307 and "built-in" after 2.307
         String expectedLabel = j.jenkins.getSelfLabel().getName();
-        elasticAxis =
-                new ElasticAxis(
-                        axisName, expectedLabel + " || built-in", ignoreOffline, doNotExpandLabels);
+        elasticAxis = new ElasticAxis(axisName, expectedLabel + " || built-in", ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
             assertThat(elasticAxis.getValues(), hasItem(expectedLabel + "||built-in"));
         } else {
@@ -153,8 +148,7 @@ public class ElasticAxisTest {
 
     @Test
     public void testGetValuesForAgentAOrAgentB() {
-        elasticAxis =
-                new ElasticAxis(axisName, "label-A || label-B", ignoreOffline, doNotExpandLabels);
+        elasticAxis = new ElasticAxis(axisName, "label-A || label-B", ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
             assertThat(elasticAxis.getValues(), hasItem("label-A||label-B"));
         } else {
