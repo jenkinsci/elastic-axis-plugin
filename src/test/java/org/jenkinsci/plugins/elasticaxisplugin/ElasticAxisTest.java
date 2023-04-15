@@ -136,11 +136,11 @@ public class ElasticAxisTest {
 
     @Test
     public void testGetValuesForController() {
-        // selfLabel will be "master" before 2.307 and "built-in" after 2.307
         String expectedLabel = j.jenkins.getSelfLabel().getName();
-        elasticAxis = new ElasticAxis(axisName, expectedLabel + " || built-in", ignoreOffline, doNotExpandLabels);
+        String nonexistentLabel = "no-such-label";
+        elasticAxis = new ElasticAxis(axisName, expectedLabel + " || " + nonexistentLabel, ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
-            assertThat(elasticAxis.getValues(), hasItem(expectedLabel + "||built-in"));
+            assertThat(elasticAxis.getValues(), hasItem(expectedLabel + "||" + nonexistentLabel));
         } else {
             assertThat(elasticAxis.getValues(), hasItem(expectedLabel));
         }
