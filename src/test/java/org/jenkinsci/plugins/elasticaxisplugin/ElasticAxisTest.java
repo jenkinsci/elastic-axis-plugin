@@ -138,7 +138,8 @@ public class ElasticAxisTest {
     public void testGetValuesForController() {
         String expectedLabel = j.jenkins.getSelfLabel().getName();
         String nonexistentLabel = "no-such-label";
-        elasticAxis = new ElasticAxis(axisName, expectedLabel + " || " + nonexistentLabel, ignoreOffline, doNotExpandLabels);
+        elasticAxis =
+                new ElasticAxis(axisName, expectedLabel + " || " + nonexistentLabel, ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
             assertThat(elasticAxis.getValues(), hasItem(expectedLabel + "||" + nonexistentLabel));
         } else {
