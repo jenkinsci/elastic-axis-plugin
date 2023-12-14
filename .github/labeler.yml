@@ -1,11 +1,15 @@
 skip-changelog:
-  - any: [ '.gitattributes', '.github/**/*', '.gitignore', 'crowdin.yml', '.mvn/**/*' ]
+- changed-files:
+  - any-glob-to-any-file: [ '.gitattributes', '.github/**/*', '.gitignore', 'crowdin.yml', '.mvn/**/*' ]
 
 dependencies:
-  - any: [ 'pom.xml' ]
+- changed-files:
+  - any-glob-to-any-file: [ 'pom.xml' ]
 
 documentation:
-  - any: [ '*.adoc', '*.md', '*.txt', '**/*.html', '**/*.png', 'LICENSE*' ]
+- changed-files:
+  - any-glob-to-any-file: [ '*.adoc', '*.md', '*.txt', '**/*.html', '**/*.png', 'LICENSE*' ]
 
 tests:
-  - any: [ 'src/test/**/*' ]
+- changed-files:
+  - any-glob-to-any-file: [ 'src/test/**/*' ]
