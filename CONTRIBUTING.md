@@ -1,8 +1,7 @@
 # Contributing to the Elastic Axis Plugin
 
 Plugin source code is hosted on [GitHub](https://github.com/jenkinsci/elastic-axis-plugin).
-New feature proposals and bug fix proposals should be submitted as
-[GitHub pull requests](https://help.github.com/articles/creating-a-pull-request).
+New feature proposals and bug fix proposals should be submitted as [GitHub pull requests](https://help.github.com/articles/creating-a-pull-request).
 Your pull request will be evaluated by the [Jenkins job](https://ci.jenkins.io/job/Plugins/job/elastic-axis-plugin/).
 
 Before submitting your change, please assure that you've added tests that verify the change.
@@ -30,7 +29,7 @@ Please try to improve code coverage with tests when you submit pull requests.
 
 ### Reviewing code coverage
 
-The code coverage report is a set of HTML files that show methods and lines executed.
+The code coverage report shows methods and lines executed.
 The following commands will open the `index.html` file in the browser.
 
 * Windows - `start target\site\jacoco\index.html`
@@ -47,4 +46,4 @@ Green lines are covered with tests.
 ## Reporting Issues
 
 Report issues in the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#18422).
-Please use the ["How to Report an Issue"](https://www.jenkins.io/participate/report-issue/) guidelines when reporting issues.
+Please follow the guidelines in ["How to Report an Issue"](https://www.jenkins.io/participate/report-issue/) when reporting issues.
