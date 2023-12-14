@@ -1,13 +1,11 @@
 skip-changelog:
-- .gitattributes
-- .github/**/*
-- .gitignore
-- .settings/*
-- Jenkinsfile
+  - any: [ '.gitattributes', '.github/**/*', '.gitignore', 'crowdin.yml', '.mvn/**/*' ]
 
-chore:
-- pom.xml
-- CONTRIBUTING.md
+dependencies:
+  - any: [ 'pom.xml' ]
 
-enhancement:
-- README.md
+documentation:
+  - any: [ '*.adoc', '*.md', '*.txt', '**/*.html', '**/*.png', 'LICENSE*' ]
+
+tests:
+  - any: [ 'src/test/**/*' ]
