@@ -45,5 +45,5 @@ Green lines are covered with tests.
 
 ## Reporting Issues
 
-Report issues in the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#18422).
+Report issues in the [Jenkins issue tracker](https://www.jenkins.io/participate/report-issue/redirect/#17588).
 Please follow the guidelines in ["How to Report an Issue"](https://www.jenkins.io/participate/report-issue/) when reporting issues.
