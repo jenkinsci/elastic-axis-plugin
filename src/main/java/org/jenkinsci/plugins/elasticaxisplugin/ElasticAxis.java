@@ -22,7 +22,7 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
 public class ElasticAxis extends LabelAxis {
@@ -114,7 +114,7 @@ public class ElasticAxis extends LabelAxis {
         }
 
         @Override
-        public Axis newInstance(StaplerRequest req, JSONObject formData) throws FormException {
+        public Axis newInstance(StaplerRequest2 req, JSONObject formData) throws FormException {
             return new ElasticAxis(
                     formData.getString("name"),
                     formData.getString("labelString"),
