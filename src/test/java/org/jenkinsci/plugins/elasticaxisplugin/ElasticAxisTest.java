@@ -5,38 +5,28 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import hudson.model.Label;
 import hudson.model.labels.LabelAtom;
 import hudson.slaves.DumbSlave;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
 /**
  * @author Mark Waite
  */
-@RunWith(Parameterized.class)
-public class ElasticAxisTest {
+@WithJenkins
+class ElasticAxisTest {
 
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
-
-    private final String axisName;
-    private final String labelString;
-    private final boolean ignoreOffline;
-    private final boolean doNotExpandLabels;
-
-    private ElasticAxis elasticAxis;
+    private static JenkinsRule j;
 
     private static final String AGENT_PREFIX = "agent-";
     private static final String LABEL_PREFIX = "label-";
@@ -44,36 +34,29 @@ public class ElasticAxisTest {
 
     private static final String[] LABEL_SUFFIXES = {"A", "B"};
 
-    public ElasticAxisTest(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
-        this.ignoreOffline = ignoreOffline;
-        this.doNotExpandLabels = doNotExpandLabels;
-        String suffix = "-" + ignoreOffline + "-" + doNotExpandLabels;
-        this.axisName = "axis-name" + suffix;
-        this.labelString = labelString;
-    }
+    @BeforeAll
+    static void setUp(JenkinsRule rule) throws Exception {
+        j = rule;
 
-    @BeforeClass
-    public static void addAgents() throws Exception {
         // Add agents with test labels
         for (String labelSuffix : LABEL_SUFFIXES) {
             addAgent(labelSuffix);
         }
     }
 
-    public static void addAgent(String agentSuffix) throws Exception {
+    private static void addAgent(String agentSuffix) throws Exception {
         Label label = new LabelAtom(LABEL_PREFIX + agentSuffix);
         DumbSlave agent = j.createOnlineSlave(label);
         assertTrue(agent.isAcceptingTasks());
         agent.setNodeName(AGENT_PREFIX + agentSuffix);
     }
 
-    @Before
-    public void setUp() {
-        elasticAxis = new ElasticAxis(axisName, labelString, ignoreOffline, doNotExpandLabels);
+    private static ElasticAxis getElasticAxis(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
+        String axisName = "axis-name" + "-" + ignoreOffline + "-" + doNotExpandLabels;
+        return new ElasticAxis(axisName, labelString, ignoreOffline, doNotExpandLabels);
     }
 
-    @Parameterized.Parameters(name = "ignoreOffline={0},doNotExpandLabels={1}")
-    public static Collection permuteTestArguments() {
+    static List<Object[]> parameters() {
         List<Object[]> arguments = new ArrayList<>();
         Boolean[] possibleValues = {Boolean.TRUE, Boolean.FALSE};
         for (Boolean ignoreOffline : possibleValues) {
@@ -92,30 +75,38 @@ public class ElasticAxisTest {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         EqualsVerifier.forClass(ElasticAxis.class)
                 .usingGetClass()
                 .withIgnoredFields("values")
                 .verify();
     }
 
-    @Test
-    public void testGetLabelString() {
+    @ParameterizedTest(name = "ignoreOffline={1},doNotExpandLabels={2}")
+    @MethodSource("parameters")
+    void testGetLabelString(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
+        ElasticAxis elasticAxis = getElasticAxis(labelString, ignoreOffline, doNotExpandLabels);
         assertThat(elasticAxis.getLabelString(), is(labelString));
     }
 
-    @Test
-    public void testGetIgnoreOffline() {
+    @ParameterizedTest(name = "ignoreOffline={1},doNotExpandLabels={2}")
+    @MethodSource("parameters")
+    void testGetIgnoreOffline(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
+        ElasticAxis elasticAxis = getElasticAxis(labelString, ignoreOffline, doNotExpandLabels);
         assertThat(elasticAxis.getIgnoreOffline(), is(ignoreOffline));
     }
 
-    @Test
-    public void testGetDontExpandLabels() {
+    @ParameterizedTest(name = "ignoreOffline={1},doNotExpandLabels={2}")
+    @MethodSource("parameters")
+    void testGetDontExpandLabels(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
+        ElasticAxis elasticAxis = getElasticAxis(labelString, ignoreOffline, doNotExpandLabels);
         assertThat(elasticAxis.getDontExpandLabels(), is(doNotExpandLabels));
     }
 
-    @Test
-    public void testRebuild() {
+    @ParameterizedTest(name = "ignoreOffline={1},doNotExpandLabels={2}")
+    @MethodSource("parameters")
+    void testRebuild(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
+        ElasticAxis elasticAxis = getElasticAxis(labelString, ignoreOffline, doNotExpandLabels);
         if (labelString.contains(DOES_NOT_EXIST_SUFFIX)) {
             assertThat(elasticAxis.rebuild(null), is(empty()));
         } else {
@@ -124,8 +115,10 @@ public class ElasticAxisTest {
         }
     }
 
-    @Test
-    public void testGetValues() {
+    @ParameterizedTest(name = "ignoreOffline={1},doNotExpandLabels={2}")
+    @MethodSource("parameters")
+    void testGetValues(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
+        ElasticAxis elasticAxis = getElasticAxis(labelString, ignoreOffline, doNotExpandLabels);
         if (labelString.contains(DOES_NOT_EXIST_SUFFIX)) {
             assertThat(elasticAxis.getValues(), is(empty()));
         } else {
@@ -134,11 +127,13 @@ public class ElasticAxisTest {
         }
     }
 
-    @Test
-    public void testGetValuesForController() {
+    @ParameterizedTest(name = "ignoreOffline={1},doNotExpandLabels={2}")
+    @MethodSource("parameters")
+    void testGetValuesForController(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
         String expectedLabel = j.jenkins.getSelfLabel().getName();
         String nonexistentLabel = "no-such-label";
-        elasticAxis =
+        String axisName = "axis-name" + "-" + ignoreOffline + "-" + doNotExpandLabels;
+        ElasticAxis elasticAxis =
                 new ElasticAxis(axisName, expectedLabel + " || " + nonexistentLabel, ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
             assertThat(elasticAxis.getValues(), hasItem(expectedLabel + "||" + nonexistentLabel));
@@ -147,9 +142,11 @@ public class ElasticAxisTest {
         }
     }
 
-    @Test
-    public void testGetValuesForAgentAOrAgentB() {
-        elasticAxis = new ElasticAxis(axisName, "label-A || label-B", ignoreOffline, doNotExpandLabels);
+    @ParameterizedTest(name = "ignoreOffline={1},doNotExpandLabels={2}")
+    @MethodSource("parameters")
+    void testGetValuesForAgentAOrAgentB(String labelString, boolean ignoreOffline, boolean doNotExpandLabels) {
+        String axisName = "axis-name" + "-" + ignoreOffline + "-" + doNotExpandLabels;
+        ElasticAxis elasticAxis = new ElasticAxis(axisName, "label-A || label-B", ignoreOffline, doNotExpandLabels);
         if (doNotExpandLabels) {
             assertThat(elasticAxis.getValues(), hasItem("label-A||label-B"));
         } else {
